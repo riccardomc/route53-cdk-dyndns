@@ -1,0 +1,53 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "route53:ListHostedZones",
+                "route53:ListHostedZonesByName",
+                "route53:GetHostedZone",
+                "route53:ChangeResourceRecordSets",
+                "route53:ListResourceRecordSets",
+                "route53:GetChange"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:DeleteStack",
+                "cloudformation:DescribeStacks",
+                "cloudformation:CreateChangeSet",
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:ExecuteChangeSet",
+                "cloudformation:DescribeStackEvents",
+                "cloudformation:DeleteChangeSet",
+                "cloudformation:GetTemplate"
+            ],
+            "Resource": [
+                "arn:aws:cloudformation:::stack/route53-cdk-dyndns/*",
+                "arn:aws:cloudformation:::stack/CDKToolkit/*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": [
+                "s3:ReplicateObject",
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:RestoreObject",
+                "s3:DeleteObject",
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::cdktoolkit-stagingbucket-*/*",
+                "arn:aws:s3:::cdktoolkit-stagingbucket-*"
+            ]
+        }
+    ]
+}
