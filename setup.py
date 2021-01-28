@@ -20,6 +20,8 @@ setuptools.setup(
 
     install_requires=[
         "aws-cdk.core==1.87.0",
+        "aws-cdk.aws-route53==1.87.0",
+        "requests==2.21.0",
     ],
 
     python_requires=">=3.6",
