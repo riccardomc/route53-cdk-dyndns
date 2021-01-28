@@ -1,58 +1,71 @@
+# AWS Route53 CDK Dyndns
 
-# Welcome to your CDK Python project!
+Recently I bought a small [single-board
+computer](https://www.notebookcheck.net/Odyssey-Blue-A-powerful-x86-and-Arduino-machine-that-supports-Windows-10-and-Linux.485011.0.html)
+to use at home. I wanted to play around with the [AWS Python
+CDK](https://docs.aws.amazon.com/cdk/latest/guide/work-with-cdk-python.html) and I had a
+very simple usecase: I wanted to update a Route53 A record set with my home IP address so
+I can connect to it wherever I am.
 
-This is a blank project for Python development with CDK.
+There are other, more simple [ways](https://en.wikipedia.org/wiki/Dynamic_DNS) to achieve
+this. Your router might support DynDNS out of the box even. But, meh.
 
-The `cdk.json` file tells the CDK Toolkit how to execute your app.
+## Prerequisites
 
-This project is set up like a standard Python project.  The initialization
-process also creates a virtualenv within this project, stored under the `.venv`
-directory.  To create the virtualenv it assumes that there is a `python3`
-(or `python` for Windows) executable in your path with access to the `venv`
-package. If for any reason the automatic creation of the virtualenv fails,
-you can create the virtualenv manually.
-
-To manually create a virtualenv on MacOS and Linux:
-
-```
-$ python3 -m venv .venv
-```
-
-After the init process completes and the virtualenv is created, you can use the following
-step to activate your virtualenv.
+I use [Debian](https://www.debian.org/). So, here's a quick way to get the AWS Python CDK
+to work on a fresh install:
 
 ```
-$ source .venv/bin/activate
+curl -sL https://deb.nodesource.com/setup_12.x | sudo bash -
+sudo apt update
+sudo apt install nodejs npm python3-pip python3-venv
+sudo npm install -g aws-cdk
 ```
 
-If you are a Windows platform, you would activate the virtualenv like this:
+## Installation
+
+Clone this repository:
 
 ```
-% .venv\Scripts\activate.bat
+git clone 
+cd route53-cdk-dyndn
 ```
 
-Once the virtualenv is activated, you can install the required dependencies.
+Fill in the values in `./scripts/run.sh`:
 
 ```
-$ pip install -r requirements.txt
+export AWS_DEFAULT_REGION=
+export AWS_ACCESS_KEY_ID=
+export AWS_SECRET_ACCESS_KEY=
+export R53_HOSTED_ZONE_ID=
+export R53_ZONE_NAME=
+export R53_RECORD_NAME=
 ```
 
-At this point you can now synthesize the CloudFormation template for this code.
+Then install the systemd service and timer by:
 
 ```
-$ cdk synth
+sudo ./scripts/install.sh
 ```
 
-To add additional dependencies, for example other CDK libraries, just add
-them to your `setup.py` file and rerun the `pip install -r requirements.txt`
-command.
+You can uninstall by:
 
-## Useful commands
+```
+sudo ./scripts/uninstall.sh
+```
 
- * `cdk ls`          list all stacks in the app
- * `cdk synth`       emits the synthesized CloudFormation template
- * `cdk deploy`      deploy this stack to your default AWS account/region
- * `cdk diff`        compare deployed stack with current state
- * `cdk docs`        open CDK documentation
+## Security
 
-Enjoy!
+### systemd
+
+The installation provided is a quick and dirty way to schedule a script to run an
+interval. If you are concerned about security, the executable should be in a proper
+location as well as the configuration variables: a user can indeed modify the `run.sh`
+script to execute arbitrary code with root privileges. Make sure you are cloning the
+repository somewhere safe. 
+
+### AWS
+
+Avoid using your root credentials for this. Create a IAM user with restricted actions on
+the specific services (cloudformation, s3, route53). There's a policy document in
+`iam-policy.json` that does this.
