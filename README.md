@@ -27,8 +27,14 @@ sudo npm install -g aws-cdk
 Clone this repository:
 
 ```
-git clone 
+git clone git@github.com:riccardomc/route53-cdk-dyndns.git 
 cd route53-cdk-dyndn
+```
+
+Install python dependencies:
+
+```
+sudo apt install -r requirements.txt
 ```
 
 Fill in the values in `./scripts/run.sh`:
@@ -58,14 +64,15 @@ sudo ./scripts/uninstall.sh
 
 ### systemd
 
-The installation provided is a quick and dirty way to schedule a script to run an
-interval. If you are concerned about security, the executable should be in a proper
-location as well as the configuration variables: a user can indeed modify the `run.sh`
-script to execute arbitrary code with root privileges. Make sure you are cloning the
-repository somewhere safe. 
+The installation mechanism provided is a quick and dirty way to schedule a script to run
+at an interval using [systemd](https://en.wikipedia.org/wiki/Systemd). If you are
+concerned about security, the executable should be in a proper location as well as the
+configuration variables: a user can indeed modify the `run.sh` script to execute
+arbitrary code with root privileges. Make sure you are cloning the repository somewhere
+safe. 
 
 ### AWS
 
-Avoid using your root credentials for this. Create a IAM user with restricted actions on
-the specific services (cloudformation, s3, route53). There's a policy document in
-`iam-policy.json` that does this.
+You should avoid using your root AWS credentials for this. Create an IAM user with
+restricted actions on the specific services (cloudformation, s3, route53). There's a
+policy document in `iam-policy.json` that does this.
