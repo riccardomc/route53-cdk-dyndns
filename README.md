@@ -34,7 +34,7 @@ cd route53-cdk-dyndn
 Install python dependencies:
 
 ```
-sudo apt install -r requirements.txt
+sudo pip3 install -r requirements.txt
 ```
 
 Fill in the values in `./scripts/run.sh`:
@@ -76,3 +76,32 @@ safe.
 You should avoid using your root AWS credentials for this. Create an IAM user with
 restricted actions on the specific services (cloudformation, s3, route53). There's a
 policy document in `iam-policy.json` that does this.
+
+## What does it do?
+
+Every 30 minutes (or whatever interval you specify in
+`./scripts/systemd/route53_cdk_dyndns.timer`) the stack is redeployed with the external
+IP fetched from [api.ipify.org](https://api.ipify.org).
+
+Upon update you should see something like this in your system logs:
+
+```shell
+$ sudo journalctl -f
+[...]
+Jan 29 12:23:48 bluebot systemd[1]: Reloading.
+Jan 29 12:23:48 bluebot systemd[1]: Started Route53 Dyndns Timer.
+Jan 29 12:23:48 bluebot systemd[1]: Starting Route53 Dyndns Service...
+Jan 29 12:23:51 bluebot run.sh[29473]: route53-cdk-dyndns: deploying...
+Jan 29 12:23:52 bluebot run.sh[29473]: route53-cdk-dyndns: creating CloudFormation changeset...
+Jan 29 12:24:02 bluebot run.sh[29473]:  0/2 | 12:23:57 | UPDATE_IN_PROGRESS   | AWS::CloudFormation::Stack | route53-cdk-dyndns User Initiated
+Jan 29 12:24:07 bluebot run.sh[29473]:  0/2 | 12:24:03 | UPDATE_IN_PROGRESS   | AWS::Route53::RecordSet | ExternalIP (ExternalIP007FBEBD)
+Jan 29 12:24:38 bluebot run.sh[29473]:  2/2 | 12:24:35 | UPDATE_COMPLETE      | AWS::Route53::RecordSet | ExternalIP (ExternalIP007FBEBD)
+Jan 29 12:24:38 bluebot run.sh[29473]:  2/2 | 12:24:37 | UPDATE_COMPLETE_CLEA | AWS::CloudFormation::Stack | route53-cdk-dyndns
+Jan 29 12:24:38 bluebot run.sh[29473]:  2/2 | 12:24:38 | UPDATE_COMPLETE      | AWS::CloudFormation::Stack | route53-cdk-dyndns
+Jan 29 12:24:38 bluebot run.sh[29473]:  ✅  route53-cdk-dyndns
+Jan 29 12:24:38 bluebot run.sh[29473]: Stack ARN:
+Jan 29 12:24:38 bluebot run.sh[29473]: arn:aws:cloudformation:eu-west-1:17622514440:stack/route53-cdk-dyndns/afb743a0-60e8-11cb-9b2d-01bbb121180
+Jan 29 12:24:38 bluebot systemd[1]: route53_cdk_dyndns.service: Succeeded.
+Jan 29 12:24:38 bluebot systemd[1]: Started Route53 Dyndns Service.
+[...]
+```
