@@ -19,12 +19,13 @@ setuptools.setup(
     packages=setuptools.find_packages(where="route53_cdk_dyndns"),
 
     install_requires=[
-        "aws-cdk.core==1.87.0",
-        "aws-cdk.aws-route53==1.87.0",
+        "aws-cdk-lib>=2.0.0",
+        "constructs>=10.0.0",
+        "aws-cdk.aws-codestar-alpha>=2.0.0alpha1",
         "requests==2.21.0",
     ],
 
-    python_requires=">=3.6",
+    python_requires=">=3.7",
 
     classifiers=[
         "Development Status :: 4 - Beta",

@@ -1,12 +1,13 @@
-from aws_cdk import core
+from constructs import Construct
+from aws_cdk import Stack
 import aws_cdk.aws_route53 as route53
 from requests import get
 
 
-class Route53CdkDyndnsStack(core.Stack):
+class Route53CdkDyndnsStack(Stack):
     def __init__(
         self,
-        scope: core.Construct,
+        scope: Construct,
         construct_id: str,
         hosted_zone_id: str,
         zone_name: str,

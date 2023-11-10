@@ -3,4 +3,4 @@ Description=Route53 Dyndns Service
 
 [Service]
 Type=oneshot
-ExecStart=route53-cdk-dyndns/scripts/run.sh
+ExecStart=/home/riccardomc/route53-cdk-dyndns/scripts/run.sh

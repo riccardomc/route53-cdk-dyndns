@@ -2,7 +2,7 @@
 import os
 import sys
 
-from aws_cdk import core
+from aws_cdk import App
 
 from route53_cdk_dyndns.route53_cdk_dyndns_stack import Route53CdkDyndnsStack
 
@@ -15,7 +15,7 @@ def get_env_var_or_break(env_var):
         sys.exit(1)
 
 
-app = core.App()
+app = App()
 Route53CdkDyndnsStack(
     app,
     "route53-cdk-dyndns",

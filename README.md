@@ -73,9 +73,11 @@ safe.
 
 ### AWS
 
-You should avoid using your root AWS credentials for this. Create an IAM user with
-restricted actions on the specific services (cloudformation, s3, route53). There's a
-policy document in `iam-policy.json` that does this.
+Avoid using your root credentials for this. Create a IAM user with restricted
+actions. There's a policy document in `iam-policy.json` [allow
+usage](https://stackoverflow.com/a/61102280) of CDKv2 bootstrapped roles.
+
+You will still need a high-privileged user to run `cdk bootstrap`.
 
 ## What does it do?
 
